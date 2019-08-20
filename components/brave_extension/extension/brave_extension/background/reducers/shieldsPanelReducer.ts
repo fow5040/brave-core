@@ -32,7 +32,10 @@ import {
   onShieldsPanelShown
 } from '../api/shieldsAPI'
 import { reloadTab } from '../api/tabsAPI'
-import { applyCSSCosmeticFilters } from '../api/cosmeticFilterAPI'
+import {
+  applyAdblockCosmeticFilters,
+  applyCSSCosmeticFilters
+} from '../api/cosmeticFilterAPI'
 
 // Helpers
 import { getAllowedScriptsOrigins } from '../../helpers/noScriptUtils'
@@ -57,6 +60,7 @@ export default function shieldsPanelReducer (
         state = shieldsPanelState.resetBlockingResources(state, action.tabId)
         state = noScriptState.resetNoScriptInfo(state, action.tabId, new window.URL(action.url).origin)
       }
+      applyAdblockCosmeticFilters(action.tabId, getHostname(action.url))
       applyCSSCosmeticFilters(action.tabId, getHostname(action.url))
       break
     }

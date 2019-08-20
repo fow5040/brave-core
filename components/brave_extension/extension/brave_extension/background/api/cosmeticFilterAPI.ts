@@ -22,6 +22,31 @@ export const removeSiteFilter = (origin: string) => {
   })
 }
 
+export const applyAdblockCosmeticFilters = (tabId: number, hostname: string) => {
+  chrome.braveShields.hostnameCosmeticResources(hostname, (resources) => {
+    const stylesheet = generateCosmeticBlockingStylesheet(resources.hide_selectors, resources.style_selectors)
+    if (stylesheet) {
+      chrome.tabs.insertCSS(tabId, {
+        code: stylesheet,
+        cssOrigin: 'user',
+        runAt: 'document_start'
+      })
+    }
+
+    chrome.tabs.sendMessage(tabId, {
+      type: 'cosmeticFilterGenericExceptions',
+      exceptions: resources.exceptions
+    })
+
+    if (resources.injected_script) {
+      chrome.tabs.executeScript(tabId, {
+        code: resources.injected_script,
+        runAt: 'document_start'
+      })
+    }
+  })
+}
+
 export const applyCSSCosmeticFilters = (tabId: number, hostname: string) => {
   chrome.storage.local.get('cosmeticFilterList', (storeData = {}) => {
     if (!storeData.cosmeticFilterList) {
@@ -47,4 +72,20 @@ export const applyCSSCosmeticFilters = (tabId: number, hostname: string) => {
 
 export const removeAllFilters = () => {
   chrome.storage.local.set({ 'cosmeticFilterList': {} })
+}
+
+const generateCosmeticBlockingStylesheet = (hide_selectors: string[], style_selectors: any) => {
+  let stylesheet = ""
+  if (hide_selectors.length > 0) {
+    stylesheet += hide_selectors[0]
+    for(const selector of hide_selectors.slice(1)) {
+      stylesheet += ',' + selector
+    }
+    stylesheet += '{display:none !important;}\n'
+  }
+  for (const selector in style_selectors) {
+    stylesheet += selector + '{' + style_selectors[selector] + '\n'
+  }
+
+  return stylesheet
 }
