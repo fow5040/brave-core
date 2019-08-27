@@ -60,7 +60,6 @@ export default function shieldsPanelReducer (
         state = shieldsPanelState.resetBlockingResources(state, action.tabId)
         state = noScriptState.resetNoScriptInfo(state, action.tabId, new window.URL(action.url).origin)
       }
-      applyAdblockCosmeticFilters(action.tabId, getHostname(action.url))
       applyCSSCosmeticFilters(action.tabId, getHostname(action.url))
       break
     }
@@ -334,6 +333,9 @@ export default function shieldsPanelReducer (
         console.error('error calling `chrome.braveShields.onShieldsPanelShown()`')
       })
       break
+    }
+    case shieldsPanelTypes.PAGE_CONTENT_READY_FOR_INJECTION: {
+      applyAdblockCosmeticFilters(action.tabId, action.hostname)
     }
   }
 

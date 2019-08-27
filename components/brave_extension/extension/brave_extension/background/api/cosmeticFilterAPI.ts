@@ -23,7 +23,7 @@ export const removeSiteFilter = (origin: string) => {
 }
 
 export const applyAdblockCosmeticFilters = (tabId: number, hostname: string) => {
-  chrome.braveShields.hostnameCosmeticResources(hostname, (resources) => {
+  chrome.braveShields.hostnameCosmeticResources(hostname, async (resources) => {
     const stylesheet = generateCosmeticBlockingStylesheet(resources.hide_selectors, resources.style_selectors)
     if (stylesheet) {
       chrome.tabs.insertCSS(tabId, {

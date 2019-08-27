@@ -4,6 +4,8 @@ import {
   removeSiteFilter,
   removeAllFilters
 } from '../api/cosmeticFilterAPI'
+import shieldsPanelActions from '../actions/shieldsPanelActions'
+import { getHostname } from '../../helpers/urlUtils'
 
 export let rule = {
   host: '',
@@ -58,6 +60,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         })
       })
       break
+    }
+    case 'pageContentReadyForInjection': {
+      const tab = sender.tab
+      if (tab === undefined) {
+        break
+      }
+      const tabId = tab.id
+      if (tabId === undefined) {
+        break
+      }
+      const url = tab.url
+      if (url === undefined) {
+        break
+      }
+      const hostname = getHostname(url)
+      shieldsPanelActions.pageContentReadyForInjection(tabId, hostname)
     }
   }
 })
