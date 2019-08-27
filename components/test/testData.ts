@@ -217,6 +217,9 @@ export const getMockChrome = () => {
       getBraveShieldsEnabledAsync: function (url: string) {
         return Promise.resolve(false)
       },
+      getCosmeticFilteringControlTypeAsync: function (url: string) {
+        return Promise.resolve('block')
+      },
       getAdControlTypeAsync: function (url: string) {
         return Promise.resolve('block')
       },
@@ -233,6 +236,9 @@ export const getMockChrome = () => {
         return Promise.resolve('block')
       },
       setBraveShieldsEnabledAsync: function (url: string, enabled: boolean) {
+        return new Promise(() => [])
+      },
+      setCosmeticFilteringControlTypeAsync: function (url: string, controlType: string) {
         return new Promise(() => [])
       },
       setAdControlTypeAsync: function (url: string, controlType: string) {
