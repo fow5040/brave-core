@@ -97,6 +97,8 @@ ledger::WalletPropertiesPtr Wallet::WalletPropertiesToWalletInfo(
   ledger::WalletPropertiesPtr wallet = ledger::WalletProperties::New();
   wallet->parameters_choices = properties.parameters_choices_;
   wallet->fee_amount = ledger_->GetContributionAmount();
+  wallet->default_tip_choices = properties.default_tip_choices_;
+  wallet->default_monthly_tip_choices = properties.default_monthly_tip_choices_;
 
   for (size_t i = 0; i < properties.grants_.size(); i ++) {
     ledger::GrantPtr grant = ledger::Grant::New();

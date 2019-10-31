@@ -78,6 +78,10 @@ void ExtensionRewardsServiceObserver::OnWalletProperties(
       grant.type = wallet_properties->grants[i].type;
     }
 
+    properties.default_tip_choices = wallet_properties->default_tip_choices;
+    properties.default_monthly_tip_choices =
+        wallet_properties->default_monthly_tip_choices;
+
     std::unique_ptr<base::ListValue> args(
         extensions::api::brave_rewards::OnWalletProperties::Create(properties)
             .release());

@@ -109,6 +109,7 @@ declare namespace RewardsExtension {
 
   export interface WalletProperties {
     grants?: Grant[]
+    defaultMonthlyTipChoices: number[]
   }
 
   export interface Report {

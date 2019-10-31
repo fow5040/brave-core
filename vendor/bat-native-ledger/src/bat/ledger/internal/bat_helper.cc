@@ -23,6 +23,10 @@
 
 namespace braveledger_bat_helper {
 
+static const char* kParametersKey = "parameters";
+static const char* kDefaultTipChoicesKey = "defaultTipChoices";
+static const char* kDefaultMonthlyTipChoicesKey = "defaultMonthlyChoices";
+
 bool isProbiValid(const std::string& probi) {
   // probi shouldn't be longer then 44
   if (probi.length() > 44) {
@@ -778,6 +782,8 @@ WALLET_PROPERTIES_ST::WALLET_PROPERTIES_ST(
   fee_amount_ = properties.fee_amount_;
   parameters_choices_ = properties.parameters_choices_;
   grants_ = properties.grants_;
+  default_tip_choices_ = properties.default_tip_choices_;
+  default_monthly_tip_choices_ = properties.default_monthly_tip_choices_;
 }
 
 bool WALLET_PROPERTIES_ST::loadFromJson(const std::string & json) {
@@ -793,6 +799,31 @@ bool WALLET_PROPERTIES_ST::loadFromJson(const std::string & json) {
   if (!error) {
     for (auto & i : d["parameters"]["adFree"]["choices"]["BAT"].GetArray()) {
       parameters_choices_.push_back(i.GetDouble());
+    }
+
+    const auto& parameters = d[kParametersKey];
+    if (parameters.HasMember(kDefaultTipChoicesKey) &&
+        parameters[kDefaultTipChoicesKey].IsArray()) {
+      const auto& tip_choices = parameters[kDefaultTipChoicesKey];
+      for (const auto& choice : tip_choices.GetArray()) {
+        if (choice.IsDouble()) {
+          default_tip_choices_.push_back(choice.GetDouble());
+        } else if (choice.IsString()) {
+          default_tip_choices_.push_back(std::stod(choice.GetString()));
+        }
+      }
+    }
+
+    if (parameters.HasMember(kDefaultMonthlyTipChoicesKey) &&
+        parameters[kDefaultMonthlyTipChoicesKey].IsArray()) {
+      const auto& tip_choices = parameters[kDefaultMonthlyTipChoicesKey];
+      for (const auto& choice : tip_choices.GetArray()) {
+        if (choice.IsDouble()) {
+          default_monthly_tip_choices_.push_back(choice.GetDouble());
+        } else if (choice.IsString()) {
+          default_monthly_tip_choices_.push_back(std::stod(choice.GetString()));
+        }
+      }
     }
 
     fee_amount_ = d["parameters"]["adFree"]["fee"]["BAT"].GetDouble();
@@ -855,6 +886,21 @@ void saveToJson(JsonWriter* writer, const WALLET_PROPERTIES_ST& data) {
   writer->EndObject();
 
   writer->EndObject();
+
+  writer->String(kDefaultTipChoicesKey);
+  writer->StartArray();
+  for (double choice : data.default_tip_choices_) {
+    writer->Double(choice);
+  }
+  writer->EndArray();
+
+  writer->String(kDefaultMonthlyTipChoicesKey);
+  writer->StartArray();
+  for (double choice : data.default_monthly_tip_choices_) {
+    writer->Double(choice);
+  }
+  writer->EndArray();
+
   writer->EndObject();
 
   writer->String("grants");

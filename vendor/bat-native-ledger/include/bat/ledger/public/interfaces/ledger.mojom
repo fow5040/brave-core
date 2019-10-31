@@ -86,6 +86,8 @@ struct WalletProperties {
   double fee_amount;
   array<double> parameters_choices;
   array<Grant> grants;
+  array<double> default_tip_choices;
+  array<double> default_monthly_tip_choices;
 };
 
 struct Balance {
