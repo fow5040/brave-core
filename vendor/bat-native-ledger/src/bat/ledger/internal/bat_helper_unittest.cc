@@ -140,3 +140,79 @@ TEST(BatHelperTest, TransactionSerialization) {
   ASSERT_EQ(deserialized.ballots_[0].offset_,
     transaction.ballots_[0].offset_);
 }
+
+TEST(BatHelperTest, WalletPropertiesWithoutDefaultTipsDeserialization) {
+  std::string json = R"({
+      "altcurrency" : "BAT",
+      "unconfirmed" : "0.0000",
+      "parameters" : {
+        "adFree" : {
+           "range" : {
+              "BAT" : [ 5, 100 ]
+           },
+           "fee" : {
+              "BAT" : 10
+           },
+           "choices" : {
+              "BAT" : [ 5, 10, 15, 20, 25, 50, 100 ]
+           },
+           "days" : 30,
+           "currency" : "BAT"
+        }
+      },
+      "probi" : "30500000000000000000",
+      "balance" : "30.5000",
+      "rates" : {
+        "USD" : 0.23289030825305,
+        "BAT" : 1
+      },
+      "cardBalance" : "30.5"
+  })";
+
+  braveledger_bat_helper::WALLET_PROPERTIES_ST wallet_properties_from_json;
+  ASSERT_TRUE(wallet_properties_from_json.loadFromJson(json));
+
+  ASSERT_EQ(wallet_properties_from_json.parameters_choices_,
+      std::vector<double>({ 5, 10, 15, 20, 25, 50, 100 }));
+  ASSERT_TRUE(wallet_properties_from_json.default_tip_choices_.empty());
+  ASSERT_TRUE(wallet_properties_from_json.default_monthly_tip_choices_.empty());
+}
+
+TEST(BatHelperTest, WalletPropertiesEmptyDefaultTipsDeserialization) {
+  std::string json = R"({
+      "altcurrency" : "BAT",
+      "unconfirmed" : "0.0000",
+      "parameters" : {
+        "defaultTipChoices" : [ ],
+        "defaultMonthlyChoices" : [ ],
+        "adFree" : {
+           "range" : {
+              "BAT" : [ 5, 100 ]
+           },
+           "fee" : {
+              "BAT" : 10
+           },
+           "choices" : {
+              "BAT" : [ 5, 10, 15, 20, 25, 50, 100 ]
+           },
+           "days" : 30,
+           "currency" : "BAT"
+        }
+      },
+      "probi" : "30500000000000000000",
+      "balance" : "30.5000",
+      "rates" : {
+        "USD" : 0.23289030825305,
+        "BAT" : 1
+      },
+      "cardBalance" : "30.5"
+  })";
+
+  braveledger_bat_helper::WALLET_PROPERTIES_ST wallet_properties_from_json;
+  ASSERT_TRUE(wallet_properties_from_json.loadFromJson(json));
+
+  ASSERT_EQ(wallet_properties_from_json.parameters_choices_,
+      std::vector<double>({ 5, 10, 15, 20, 25, 50, 100 }));
+  ASSERT_TRUE(wallet_properties_from_json.default_tip_choices_.empty());
+  ASSERT_TRUE(wallet_properties_from_json.default_monthly_tip_choices_.empty());
+}
