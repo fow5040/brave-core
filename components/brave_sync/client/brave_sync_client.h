@@ -35,7 +35,8 @@ class SyncMessageHandler {
   virtual void OnGetInitData(const std::string &sync_version) = 0;
   // SAVE_INIT_DATA
   virtual void OnSaveInitData(const Uint8Array& seed,
-                              const Uint8Array& device_id) = 0;
+                              const Uint8Array& device_id,
+                              const std::string& device_uuid) = 0;
   // SYNC_READY
   virtual void OnSyncReady() = 0;
   // GET_EXISTING_OBJECTS

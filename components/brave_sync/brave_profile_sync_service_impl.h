@@ -86,7 +86,8 @@ class BraveProfileSyncServiceImpl
   void OnSyncSetupError(const std::string& error) override;
   void OnGetInitData(const std::string& sync_version) override;
   void OnSaveInitData(const brave_sync::Uint8Array& seed,
-                      const brave_sync::Uint8Array& device_id) override;
+                      const brave_sync::Uint8Array& device_id,
+                      const std::string& device_uuid) override;
   void OnSyncReady() override;
   void OnGetExistingObjects(const std::string& category_name,
                             std::unique_ptr<brave_sync::RecordsList> records,
@@ -171,6 +172,7 @@ class BraveProfileSyncServiceImpl
   void SendDeviceSyncRecord(const int action,
                             const std::string& device_name,
                             const std::string& device_id,
+                            const std::string& device_uuid,
                             const std::string& object_id);
   void OnResolvedPreferences(const brave_sync::RecordsList& records);
   void OnBraveSyncPrefsChanged(const std::string& pref);

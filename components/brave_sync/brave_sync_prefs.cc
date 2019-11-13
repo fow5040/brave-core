@@ -21,6 +21,7 @@ namespace brave_sync {
 namespace prefs {
 
 const char kSyncDeviceId[] = "brave_sync.device_id";
+const char kSyncDeviceUuid[] = "brave_sync.device_uuid";
 const char kSyncSeed[] = "brave_sync.seed";
 const char kSyncPrevSeed[] = "brave_sync.previous_seed";
 const char kSyncDeviceName[] = "brave_sync.device_name";
@@ -46,6 +47,7 @@ Prefs::Prefs(PrefService* pref_service) : pref_service_(pref_service) {}
 
 void Prefs::RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
   registry->RegisterStringPref(prefs::kSyncDeviceId, std::string());
+  registry->RegisterStringPref(prefs::kSyncDeviceUuid, std::string());
   registry->RegisterStringPref(prefs::kSyncSeed, std::string());
   registry->RegisterStringPref(prefs::kSyncPrevSeed, std::string());
   registry->RegisterStringPref(prefs::kSyncDeviceName, std::string());
@@ -86,6 +88,15 @@ std::string Prefs::GetThisDeviceId() const {
 void Prefs::SetThisDeviceId(const std::string& device_id) {
   DCHECK(!device_id.empty());
   pref_service_->SetString(kSyncDeviceId, device_id);
+}
+
+std::string Prefs::GetDeviceUuid() const {
+  return pref_service_->GetString(kSyncDeviceUuid);
+}
+
+void Prefs::SetDeviceUuid(const std::string& device_uuid) {
+  DCHECK(!device_uuid.empty());
+  pref_service_->SetString(kSyncDeviceUuid, device_uuid);
 }
 
 std::string Prefs::GetThisDeviceName() const {

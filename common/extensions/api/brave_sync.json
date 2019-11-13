@@ -94,7 +94,8 @@
         "type": "object",
         "description": "Represents sync device",
         "properties": {
-          "name" : {"type": "string"}
+          "name" : {"type": "string"},
+          "uuid" : {"type": "string"}
         }
       },
       {
@@ -355,6 +356,11 @@
           {
             "type": "binary",
             "name": "device_id",
+            "optional": true
+          },
+          {
+            "type": "string",
+            "name": "device_uuid",
             "optional": true
           }
         ]

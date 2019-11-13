@@ -80,7 +80,8 @@ std::string GetDeviceName() {
 RecordsListPtr CreateDeviceRecord(const std::string& device_name,
                                   const std::string& object_id,
                                   const SyncRecord::Action& action,
-                                  const std::string& device_id) {
+                                  const std::string& device_id,
+                                  const std::string& device_uuid) {
   RecordsListPtr records = std::make_unique<RecordsList>();
 
   SyncRecordPtr record = std::make_unique<SyncRecord>();
@@ -92,6 +93,7 @@ RecordsListPtr CreateDeviceRecord(const std::string& device_name,
 
   std::unique_ptr<Device> device = std::make_unique<Device>();
   device->name = device_name;
+  device->uuid = device_uuid;
   record->SetDevice(std::move(device));
 
   records->emplace_back(std::move(record));
@@ -156,6 +158,7 @@ SyncRecordPtr PrepareResolvedDevice(SyncDevice* device,
   std::unique_ptr<jslib::Device> device_record =
       std::make_unique<jslib::Device>();
   device_record->name = device->name_;
+  device_record->uuid = device->device_uuid_;
   record->SetDevice(std::move(device_record));
   return record;
 }
@@ -286,9 +289,10 @@ void BraveProfileSyncServiceImpl::OnDeleteDevice(const std::string& device_id) {
   const SyncDevice* device = sync_devices->GetByDeviceId(device_id);
   if (device) {
     const std::string device_name = device->name_;
+    const std::string device_uuid = device->device_uuid_;
     const std::string object_id = device->object_id_;
     SendDeviceSyncRecord(SyncRecord::Action::A_DELETE, device_name, device_id,
-                         object_id);
+                         device_uuid, object_id);
     FetchDevices();
   }
 }
@@ -408,13 +412,14 @@ void BraveProfileSyncServiceImpl::OnGetInitData(
 
   client_data::Config config;
   config.api_version = brave_sync_prefs_->GetApiVersion();
-  config.server_url = "https://sync.brave.com";
+  config.server_url = "https://sync-staging.brave.com";
   config.debug = true;
   brave_sync_client_->SendGotInitData(seed, device_id, config);
 }
 
-void BraveProfileSyncServiceImpl::OnSaveInitData(const Uint8Array& seed,
-                                                 const Uint8Array& device_id) {
+void BraveProfileSyncServiceImpl::OnSaveInitData(
+    const Uint8Array& seed, const Uint8Array& device_id,
+    const std::string& device_uuid) {
   DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
   DCHECK(!brave_sync_ready_);
   // If we are here and brave_sync_initializing_ is false, we have came
@@ -431,6 +436,7 @@ void BraveProfileSyncServiceImpl::OnSaveInitData(const Uint8Array& seed,
 
   brave_sync_prefs_->SetSeed(seed_str);
   brave_sync_prefs_->SetThisDeviceId(device_id_str);
+  brave_sync_prefs_->SetDeviceUuid(device_uuid);
 
   brave_sync_initializing_ = false;
 }
@@ -824,21 +830,24 @@ void BraveProfileSyncServiceImpl::SendCreateDevice() {
   std::string device_name = brave_sync_prefs_->GetThisDeviceName();
   std::string object_id = tools::GenerateObjectId();
   std::string device_id = brave_sync_prefs_->GetThisDeviceId();
+  std::string device_uuid = brave_sync_prefs_->GetDeviceUuid();
   CHECK(!device_id.empty());
 
   SendDeviceSyncRecord(SyncRecord::Action::A_CREATE, device_name, device_id,
-                       object_id);
+                       device_uuid, object_id);
 }
 
 void BraveProfileSyncServiceImpl::SendDeviceSyncRecord(
     const int action,
     const std::string& device_name,
     const std::string& device_id,
+    const std::string& device_uuid,
     const std::string& object_id) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
   RecordsListPtr records =
       CreateDeviceRecord(device_name, object_id,
-                         static_cast<SyncRecord::Action>(action), device_id);
+                         static_cast<SyncRecord::Action>(action), device_id,
+                         device_uuid);
   SendSyncRecords(SyncRecordType_PREFERENCES, std::move(records));
 }
 
@@ -852,9 +861,11 @@ void BraveProfileSyncServiceImpl::OnResolvedPreferences(
     DCHECK(record->has_device() || record->has_sitesetting());
     if (record->has_device()) {
       bool actually_merged = false;
+      auto& device = record->GetDevice();
       sync_devices->Merge(
           SyncDevice(record->GetDevice().name, record->objectId,
-                     record->deviceId, record->syncTimestamp.ToJsTime()),
+                     record->deviceId, device.uuid,
+                     record->syncTimestamp.ToJsTime()),
           record->action, &actually_merged);
       this_device_deleted =
           this_device_deleted ||

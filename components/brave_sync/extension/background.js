@@ -169,8 +169,8 @@ class InjectedObject {
         if (!arg1) {
           arg1 = null;
         }
-        console.log(`"save-init-data" seed=${JSON.stringify(arg1)} deviceId=${JSON.stringify(deviceId)}`);
-        chrome.braveSync.saveInitData(arg1/*seed*/, deviceId);
+        console.log(`"save-init-data" seed=${JSON.stringify(arg1)} deviceId=${JSON.stringify(deviceId)} deviceUuid=${arg3}`);
+        chrome.braveSync.saveInitData(arg1/*seed*/, deviceId, arg3);
         break;
       case "sync-ready":
         console.log(`"sync-ready"`);
