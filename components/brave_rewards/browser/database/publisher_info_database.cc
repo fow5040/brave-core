@@ -1182,7 +1182,7 @@ PublisherInfoDatabase::GetAllUnblindedTokens()  {
   return unblinded_token_->GetAllRecords(&GetDB());
 }
 
-bool PublisherInfoDatabase::DeleteUnblindedToken(
+bool PublisherInfoDatabase::DeleteUnblindedTokens(
     const std::vector<std::string>& id_list) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
@@ -1193,7 +1193,7 @@ bool PublisherInfoDatabase::DeleteUnblindedToken(
     return false;
   }
 
-  return unblinded_token_->DeleteRecord(&GetDB(), id_list);
+  return unblinded_token_->DeleteRecords(&GetDB(), id_list);
 }
 
 // Other -------------------------------------------------------------------

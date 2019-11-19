@@ -124,7 +124,7 @@ class PublisherInfoDatabase {
 
   ledger::UnblindedTokenList GetAllUnblindedTokens();
 
-  bool DeleteUnblindedToken(const std::vector<std::string>& id_list);
+  bool DeleteUnblindedTokens(const std::vector<std::string>& id_list);
 
   void RecordP3AStats(bool auto_contributions_on);
 
