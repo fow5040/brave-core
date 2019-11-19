@@ -80,7 +80,9 @@ export default class SyncEnabledContent extends React.PureComponent<Props, State
         content: [
           { content: (
             <TableRowDevice>
-              {device.name} {device.id === this.props.syncData.thisDeviceId ? getLocale('thisDevice') : null}
+              {device.name} {
+                  device.uuid === this.props.syncData.thisDeviceUuid ? getLocale('thisDevice') : null
+              }
             </TableRowDevice>
           )},
           { content: device.lastActive },
