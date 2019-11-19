@@ -1,11 +1,11 @@
 'use strict';
 
-chrome.braveSync.onGotInitData.addListener(function(seed, device_id, config, sync_words) {
+chrome.braveSync.onGotInitData.addListener(function(seed, device_id, config, device_uuid) {
   if ((seed instanceof Array && seed.length == 0) || (seed instanceof Uint8Array && seed.length == 0)) {
     seed = null;
   }
-  console.log(`"got-init-data" seed=${JSON.stringify(seed)} device_id=${JSON.stringify(device_id)} config=${JSON.stringify(config)}`);
-  callbackList["got-init-data"](null, seed, device_id, config);
+  console.log(`"got-init-data" seed=${JSON.stringify(seed)} device_id=${JSON.stringify(device_id)} config=${JSON.stringify(config)} device_uuid=${device_uuid}`);
+  callbackList["got-init-data"](null, seed, device_id, config, device_uuid);
 });
 
 chrome.braveSync.onFetchSyncRecords.addListener(function(category_names, start_at, max_records) {

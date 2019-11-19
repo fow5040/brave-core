@@ -404,6 +404,14 @@ void BraveProfileSyncServiceImpl::OnGetInitData(
     VLOG(1) << "[Brave Sync] Init empty device id";
   }
 
+  std::string device_uuid;
+  if (!brave_sync_prefs_->GetDeviceUuid().empty()) {
+    device_uuid = brave_sync_prefs_->GetDeviceUuid();
+    VLOG(1) << "[Brave Sync] Init device uuid from prefs: " << device_uuid;
+  } else {
+    VLOG(1) << "[Brave Sync] Init empty device uuid";
+  }
+
   DCHECK(!sync_version.empty());
   // TODO(bridiver) - this seems broken because using the version we get back
   // from the server (currently v1.4.2) causes things to break. What is the
@@ -414,7 +422,7 @@ void BraveProfileSyncServiceImpl::OnGetInitData(
   config.api_version = brave_sync_prefs_->GetApiVersion();
   config.server_url = "https://sync-staging.brave.com";
   config.debug = true;
-  brave_sync_client_->SendGotInitData(seed, device_id, config);
+  brave_sync_client_->SendGotInitData(seed, device_id, config, device_uuid);
 }
 
 void BraveProfileSyncServiceImpl::OnSaveInitData(

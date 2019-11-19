@@ -201,6 +201,11 @@
           {
             "$ref": "Config",
             "name": "config"
+          },
+          {
+            "type": "string",
+            "name": "device_uuid",
+            "optional": true
           }
         ]
       },
