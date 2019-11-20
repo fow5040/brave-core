@@ -38,7 +38,7 @@ class MockLogStreamImpl : public ledger::LogStream {
 
 class MockLedgerImpl : public LedgerImpl {
  public:
-  MockLedgerImpl(ledger::LedgerClient* client);
+  explicit MockLedgerImpl(ledger::LedgerClient* client);
 
   ~MockLedgerImpl() override;
 

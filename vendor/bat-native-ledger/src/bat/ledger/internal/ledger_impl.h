@@ -212,10 +212,11 @@ class LedgerImpl : public ledger::Ledger,
       const ledger::UrlMethod method,
       ledger::LoadURLCallback callback);
 
-  void OnReconcileComplete(ledger::Result result,
-                           const std::string& viewing_id,
-                           const std::string& probi,
-                           const ledger::RewardsType type);
+  virtual void OnReconcileComplete(
+      ledger::Result result,
+      const std::string& viewing_id,
+      const std::string& probi,
+      const ledger::RewardsType type);
 
   std::string URIEncode(const std::string& value) override;
 
@@ -265,8 +266,8 @@ class LedgerImpl : public ledger::Ledger,
                             ledger::ReportType type,
                             const std::string& probi) override;
 
-  braveledger_bat_helper::CURRENT_RECONCILE
-  GetReconcileById(const std::string& viewingId);
+  virtual braveledger_bat_helper::CURRENT_RECONCILE GetReconcileById(
+      const std::string& viewingId);
 
   void RemoveReconcileById(const std::string& viewingId);
 
@@ -589,12 +590,12 @@ class LedgerImpl : public ledger::Ledger,
     ledger::UnblindedTokenPtr info,
     ledger::ResultCallback callback);
 
-  void GetAllUnblindedTokens(
-    ledger::GetAllUnblindedTokensCallback callback);
+  virtual void GetAllUnblindedTokens(
+      ledger::GetAllUnblindedTokensCallback callback);
 
-  void DeleteUnblindedTokens(
-    const std::vector<std::string>& id_list,
-    ledger::ResultCallback callback);
+  virtual void DeleteUnblindedTokens(
+      const std::vector<std::string>& id_list,
+      ledger::ResultCallback callback);
 
   ledger::ClientInfoPtr GetClientInfo();
 
