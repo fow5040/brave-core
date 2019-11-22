@@ -1,0 +1,14 @@
+diff --git a/chrome/browser/flag_descriptions.h b/chrome/browser/flag_descriptions.h
+index 47c9307fbd224fc23d30ed3e11eb63b607e81b43..ae0db0a5626379680fdeeb8882e476f47c0875c8 100644
+--- a/chrome/browser/flag_descriptions.h
++++ b/chrome/browser/flag_descriptions.h
+@@ -1144,6 +1144,9 @@ extern const char kStrictOriginIsolationDescription[];
+ extern const char kSystemKeyboardLockName[];
+ extern const char kSystemKeyboardLockDescription[];
+ 
++extern const char kBraveAdblockCosmeticFilteringName[];
++extern const char kBraveAdblockCosmeticFilteringDescription[];
++
+ extern const char kSuggestionsWithSubStringMatchName[];
+ extern const char kSuggestionsWithSubStringMatchDescription[];
+ 

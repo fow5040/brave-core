@@ -1,8 +1,17 @@
 diff --git a/chrome/browser/about_flags.cc b/chrome/browser/about_flags.cc
-index e608f06a232ab1acb64916806755caac1dcec607..d422a54c8696c3afdef13e223bf25c2697f0f2c9 100644
+index e608f06a232ab1acb64916806755caac1dcec607..e92684ca34e9b8cbfb90ae6b968cfd93a45fe170 100644
 --- a/chrome/browser/about_flags.cc
 +++ b/chrome/browser/about_flags.cc
-@@ -280,14 +280,14 @@ const FeatureEntry::Choice kTouchTextSelectionStrategyChoices[] = {
+@@ -162,6 +162,8 @@
+ #include "ui/gl/gl_switches.h"
+ #include "ui/native_theme/native_theme_features.h"
+ 
++#include "brave/browser/features.h"
++
+ #if defined(OS_LINUX)
+ #include "base/allocator/buildflags.h"
+ #endif
+@@ -280,14 +282,14 @@ const FeatureEntry::Choice kTouchTextSelectionStrategyChoices[] = {
  const FeatureEntry::Choice kTraceUploadURL[] = {
      {flags_ui::kGenericExperimentChoiceDisabled, "", ""},
      {flag_descriptions::kTraceUploadUrlChoiceOther, switches::kTraceUploadURL,
@@ -21,3 +30,13 @@ index e608f06a232ab1acb64916806755caac1dcec607..d422a54c8696c3afdef13e223bf25c26
  
  const FeatureEntry::Choice kPassiveListenersChoices[] = {
      {flags_ui::kGenericExperimentChoiceDefault, "", ""},
+@@ -2225,6 +2227,9 @@ const FeatureEntry kFeatureEntries[] = {
+     {"system-keyboard-lock", flag_descriptions::kSystemKeyboardLockName,
+      flag_descriptions::kSystemKeyboardLockDescription, kOsDesktop,
+      FEATURE_VALUE_TYPE(features::kSystemKeyboardLock)},
++    {"brave-adblock-cosmetic-filtering", flag_descriptions::kBraveAdblockCosmeticFilteringName,
++     flag_descriptions::kBraveAdblockCosmeticFilteringDescription, kOsAll,
++     FEATURE_VALUE_TYPE(features::kBraveAdblockCosmeticFiltering)},
+ #if defined(OS_ANDROID)
+     {"offline-pages-load-signal-collecting",
+      flag_descriptions::kOfflinePagesLoadSignalCollectingName,

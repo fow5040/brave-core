@@ -1,0 +1,15 @@
+diff --git a/chrome/browser/flag_descriptions.cc b/chrome/browser/flag_descriptions.cc
+index e02f52d84df77ecd9dbe6d62c41a5e42d50a7134..c2c25025b3f32454b8e1c4ad489672bc454fe600 100644
+--- a/chrome/browser/flag_descriptions.cc
++++ b/chrome/browser/flag_descriptions.cc
+@@ -1940,6 +1940,10 @@ const char kSystemKeyboardLockDescription[] =
+     "keyboard shortcuts and have the events routed directly to the website "
+     "when in fullscreen mode.";
+ 
++const char kBraveAdblockCosmeticFilteringName[] = "Enable cosmetic filtering";
++const char kBraveAdblockCosmeticFilteringDescription[] =
++    "Enable support for cosmetic filtering";
++
+ const char kTabEngagementReportingName[] = "Tab Engagement Metrics";
+ const char kTabEngagementReportingDescription[] =
+     "Tracks tab engagement and lifetime metrics.";
