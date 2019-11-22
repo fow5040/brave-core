@@ -27,6 +27,7 @@
 #include "brave/components/brave_shields/browser/ad_block_base_service.h"
 #include "brave/components/brave_shields/browser/ad_block_service.h"
 #include "brave/browser/brave_browser_process_impl.h"
+#include "brave/browser/features.h"
 
 using brave_shields::BraveShieldsWebContentsObserver;
 using brave_shields::ControlType;
@@ -143,6 +144,13 @@ BraveShieldsGetBraveShieldsEnabledFunction::Run() {
   Profile* profile = Profile::FromBrowserContext(browser_context());
   auto enabled = ::brave_shields::GetBraveShieldsEnabled(profile, url);
   auto result = std::make_unique<base::Value>(enabled);
+
+  return RespondNow(OneArgument(std::move(result)));
+}
+
+ExtensionFunction::ResponseAction
+BraveShieldsGetCosmeticFilteringEnabledFunction::Run() {
+  auto result = std::make_unique<base::Value>(base::FeatureList::IsEnabled(features::kBraveAdblockCosmeticFiltering));
 
   return RespondNow(OneArgument(std::move(result)));
 }
