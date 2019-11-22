@@ -1196,6 +1196,22 @@ bool PublisherInfoDatabase::DeleteUnblindedToken(
   return unblinded_token_->DeleteRecord(&GetDB(), id_list);
 }
 
+bool PublisherInfoDatabase::DeleteUnblindedTokensForPromotion(
+    const std::string& promotion_id) {
+  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+
+  bool initialized = Init();
+  DCHECK(initialized);
+
+  if (!initialized) {
+    return false;
+  }
+
+  return DatabaseUnblindedToken::DeleteRecordsForPromotion(
+      &GetDB(),
+      promotion_id);
+}
+
 // Other -------------------------------------------------------------------
 
 void PublisherInfoDatabase::RecordP3AStats(bool auto_contributions_on) {
