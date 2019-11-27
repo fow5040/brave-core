@@ -10,6 +10,7 @@
 #include "bat/ledger/internal/bat_util.h"
 #include "bat/ledger/internal/ledger_impl.h"
 #include "bat/ledger/internal/contribution/contribution_unblinded.h"
+#include "bat/ledger/internal/properties/reconcile_direction_properties.h"
 #include "bat/ledger/internal/request/promotion_requests.h"
 #include "brave_base/random.h"
 #include "net/http/http_status_code.h"
@@ -140,7 +141,7 @@ void Unblinded::OnUnblindedTokens(
   double current_amount = 0.0;
   ledger::UnblindedTokenList token_list;
   for (auto & item : list) {
-    if (item->value + current_amount > reconcile.fee_) {
+    if (item->value + current_amount > reconcile.fee) {
       break;
     }
 
@@ -156,28 +157,28 @@ void Unblinded::MakeContribution(
     ledger::UnblindedTokenList list) {
   const auto reconcile = ledger_->GetReconcileById(viewing_id);
 
-  if (reconcile.type_ == ledger::RewardsType::ONE_TIME_TIP ||
-      reconcile.type_ == ledger::RewardsType::RECURRING_TIP) {
+  if (reconcile.type == ledger::RewardsType::ONE_TIME_TIP ||
+      reconcile.type == ledger::RewardsType::RECURRING_TIP) {
     const auto callback = std::bind(&Unblinded::ContributionCompleted,
         this,
         _1,
         viewing_id);
     SendTokens(
-        reconcile.directions_.front().publisher_key_,
-        reconcile.type_,
+        reconcile.directions.front().publisher_key,
+        reconcile.type,
         std::move(list),
         callback);
     return;
   }
 
-  if (reconcile.type_ == ledger::RewardsType::AUTO_CONTRIBUTE) {
+  if (reconcile.type == ledger::RewardsType::AUTO_CONTRIBUTE) {
     PrepareAutoContribution(viewing_id, std::move(list));
   }
 }
 
 bool Unblinded::GetStatisticalVotingWinner(
     double dart,
-    const braveledger_bat_helper::Directions& directions,
+    const ledger::ReconcileDirections& directions,
     Winners* winners) const {
   if (!winners) {
     return false;
@@ -185,19 +186,19 @@ bool Unblinded::GetStatisticalVotingWinner(
 
   double upper = 0.0;
   for (const auto& item : directions) {
-    upper += item.amount_percent_ / 100.0;
+    upper += item.amount_percent / 100.0;
     if (upper < dart) {
       continue;
     }
 
-    auto iter = winners->find(item.publisher_key_);
+    auto iter = winners->find(item.publisher_key);
 
     uint32_t current_value = 0;
     if (iter != winners->end()) {
-      current_value = winners->at(item.publisher_key_);
-      winners->at(item.publisher_key_) = current_value + 1;
+      current_value = winners->at(item.publisher_key);
+      winners->at(item.publisher_key) = current_value + 1;
     } else {
-      winners->emplace(item.publisher_key_, 1);
+      winners->emplace(item.publisher_key, 1);
     }
 
     return true;
@@ -208,7 +209,7 @@ bool Unblinded::GetStatisticalVotingWinner(
 
 void Unblinded::GetStatisticalVotingWinners(
     uint32_t total_votes,
-    const braveledger_bat_helper::Directions& directions,
+    const ledger::ReconcileDirections& directions,
     Winners* winners) const {
   while (total_votes > 0) {
     double dart = brave_base::random::Uniform_01();
@@ -228,7 +229,7 @@ void Unblinded::PrepareAutoContribution(
 
   const auto reconcile = ledger_->GetReconcileById(viewing_id);
   Winners winners;
-  GetStatisticalVotingWinners(list.size(), reconcile.directions_, &winners);
+  GetStatisticalVotingWinners(list.size(), reconcile.directions, &winners);
 
   uint32_t current_position = 0;
   for (auto & winner : winners) {
@@ -313,12 +314,12 @@ void Unblinded::ContributionCompleted(
     const std::string& viewing_id) {
   const auto reconcile = ledger_->GetReconcileById(viewing_id);
   const auto amount =
-      braveledger_bat_util::ConvertToProbi(std::to_string(reconcile.fee_));
+      braveledger_bat_util::ConvertToProbi(std::to_string(reconcile.fee));
 
   ledger_->OnReconcileComplete(result,
                                viewing_id,
                                amount,
-                               reconcile.type_);
+                               reconcile.type);
 
   if (result != ledger::Result::LEDGER_OK) {
     if (!viewing_id.empty()) {

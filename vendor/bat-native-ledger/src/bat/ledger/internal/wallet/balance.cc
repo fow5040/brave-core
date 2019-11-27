@@ -15,7 +15,6 @@
 #include "bat/ledger/internal/bat_helper.h"
 #include "bat/ledger/internal/ledger_impl.h"
 #include "bat/ledger/internal/uphold/uphold.h"
-#include "bat/ledger/internal/rapidjson_bat_helper.h"
 #include "bat/ledger/internal/request/request_util.h"
 #include "net/http/http_status_code.h"
 

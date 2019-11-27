@@ -11,10 +11,11 @@
 
 #include "bat/ledger/mojom_structs.h"
 #include "bat/ledger/internal/bat_helper.h"
+#include "bat/ledger/internal/properties/reconcile_direction_properties.h"
 
 namespace braveledger_contribution {
 
-braveledger_bat_helper::Directions
+ledger::ReconcileDirections
 FromContributionQueuePublishersToReconcileDirections(
     ledger::ContributionQueuePublisherList list);
 

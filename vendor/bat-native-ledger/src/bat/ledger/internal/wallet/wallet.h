@@ -56,7 +56,7 @@ class Wallet {
   void GetWalletProperties(ledger::OnWalletPropertiesCallback callback);
 
   ledger::WalletPropertiesPtr WalletPropertiesToWalletInfo(
-    const braveledger_bat_helper::WALLET_PROPERTIES_ST& properties);
+    const ledger::WalletProperties& properties);
 
   void FetchBalance(ledger::FetchBalanceCallback callback);
 
