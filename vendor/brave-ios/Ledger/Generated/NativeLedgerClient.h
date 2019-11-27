@@ -96,4 +96,5 @@ private:
   void DeleteUnblindedToken(const std::vector<std::string>& id_list, ledger::ResultCallback callback) override;
   ledger::ClientInfoPtr GetClientInfo() override;
   void UnblindedTokensReady() override;
+  std::string GetDatabasePath() const override;
 };

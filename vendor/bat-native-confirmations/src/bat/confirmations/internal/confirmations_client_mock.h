@@ -375,6 +375,8 @@ class MockConfirmationsClient : public ConfirmationsClient {
   MOCK_METHOD0(GetClientInfo, ledger::ClientInfoPtr());
 
   MOCK_METHOD0(UnblindedTokensReady, void());
+
+  MOCK_CONST_METHOD1(GetDatabasePath, std::string());
 };
 
 }  // namespace confirmations

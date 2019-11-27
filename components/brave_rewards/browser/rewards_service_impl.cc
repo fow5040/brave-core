@@ -4380,4 +4380,8 @@ void RewardsServiceImpl::OnGetAnonWalletStatus(
   std::move(callback).Run(static_cast<uint32_t>(result));
 }
 
+std::string RewardsServiceImpl::GetDatabasePath() const {
+  return publisher_info_db_path_.value();
+}
+
 }  // namespace brave_rewards
